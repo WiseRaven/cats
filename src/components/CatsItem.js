@@ -1,43 +1,65 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function ToogleClick(e) {
-    e.preventDefault();
 
-    e.currentTarget.closest('li').classList.toggle('active');
-    document.querySelectorAll('.more-btn').forEach(item => item.classList.toggle('disabled'));
-}
+class CatsItem extends React.Component {
+    constructor() {
+        super();
+        
+        this.state = {
+            isOpened: false, 
+        }
+    }
 
-function CatsItem({ description, image, name }) {
-    return (
-        <li>
-            <figure>
+    handleOpenEvent = (e) => { 
+        e.preventDefault();
 
-                <img src={ image } alt={ name } />
+        this.setState({ isOpened: true })
+    }
 
-                <figcaption>
-                    <h5 className="cats-title">
-                        { name }
-                    </h5>
-                    
-                    <p className="cats-description">
-                        { description }
+    handleCloseEvent = (e) => {
+        e.preventDefault();
 
-                        <br />
+        this.setState({ isOpened: false })
+    }
+    
+    render() {
+        const { description, image, name } = this.props;
+        const { isOpened } = this.state;
+     
+        return (
+            <li className = {
+                    isOpened ? 'active' : ''
+                }
+            >
+                <figure>
 
-                        <a href="#" className="hide-btn" onClick={ (e) => ToogleClick(e) }>
-                            Hide
+                    <img src={ image } alt={ name } />
+
+                    <figcaption>
+                        <h5 className="cats-title">
+                            { name }
+                        </h5>
+                        
+                        <p className="cats-description">
+                            { description }
+
+                            <br />
+
+                            <a href="#" className="hide-btn" onClick={ this.handleCloseEvent }>
+                                Hide
+                            </a>
+                        </p>
+
+                        <a href="#" className="more-btn" onClick={ this.handleOpenEvent }>
+                            More info...
                         </a>
-                    </p>
+                    </figcaption>
 
-                    <a href="#" className="more-btn" onClick={ (e) => ToogleClick(e) }>
-                        More info...
-                    </a>
-                </figcaption>
-
-            </figure>
-        </li>
-    )
+                </figure>
+            </li>
+        )
+    }
 }
 
 CatsItem.propTypes = {
@@ -45,5 +67,10 @@ CatsItem.propTypes = {
     image: PropTypes.string.isRequired, 
     name: PropTypes.string.isRequired
 }
+
+CatsItem.defaultProps = {
+    description: 'Some text about cat', 
+    name: 'Cats name'
+};
 
 export default CatsItem
